@@ -1,3 +1,5 @@
+package com.conimon;
+
 import java.util.Arrays;
 import java.util.Random;
 
@@ -7,15 +9,15 @@ public class TimeStampCompression {
         System.out.println(Arrays.toString(time_stamps));
     }
 
-    public static long[] generateTimeStamps(int size, long step_size, long delta) {
-        /**
-         * Generates an array of time stamps (as 8 byte longs).
-         * Parameters:
-         *      int size: Number of time stamps
-         *      long step_size: Determines time difference between two time stamps (in nano seconds)
-         *      long delta: Determines maximum deviation for time differences (in nano seconds)
-        */
+    /**
+     * Generates an array of time stamps (as 8 byte longs).
+     * Parameters:
+     *      int size: Number of time stamps
+     *      long step_size: Determines time difference between two time stamps (in nano seconds)
+     *      long delta: Determines maximum deviation for time differences (in nano seconds)
+     */
 
+    public static long[] generateTimeStamps(int size, long step_size, long delta) {
         long[] time_stamps = new long[size];
         time_stamps[0] = 0;
         for (int i = 1; i < size; i++) {
