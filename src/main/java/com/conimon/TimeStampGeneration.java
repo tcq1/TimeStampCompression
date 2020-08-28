@@ -3,7 +3,7 @@ package com.conimon;
 import java.util.Arrays;
 import java.util.Random;
 
-public class TimeStampCompression {
+public class TimeStampGeneration {
     public static void main(String[] args) {
         long[] time_stamps = generateTimeStamps(10, 20, 3);
         System.out.println(Arrays.toString(time_stamps));
