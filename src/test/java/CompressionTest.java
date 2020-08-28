@@ -24,12 +24,17 @@ public class CompressionTest {
 
     @Test
     void computeDifferenceListTest() {
-        List<Integer> ints = Arrays.asList(10, 10, 10 ,10, 16, 4, 10, 19);
+        List<Integer> ints = Arrays.asList(10, 10, 10, 10 ,10, 16, 4, 10, 19);
         List<Long> longs = ints.stream()
                 .mapToLong(Integer::longValue)
                 .boxed().collect(Collectors.toList());
 
         List<Long> differences = compression.computeDifferenceList(1);
         assertEquals(longs, differences);
+    }
+
+    @Test
+    void toBitTest() {
+        compression.toByte(compression.getTimestamps());
     }
 }
