@@ -18,7 +18,7 @@ public class Compression {
     /**
      *
      * @param differenceDegree noted as m in the paper
-     * @return list of differences berween numbers
+     * @return list of differences between numbers
      */
     public List<Long> computeDifferenceList(int differenceDegree) {
         List<Long> differenceList = timestamps;

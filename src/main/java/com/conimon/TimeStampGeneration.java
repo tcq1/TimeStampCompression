@@ -1,31 +1,39 @@
 package com.conimon;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import lombok.Getter;
 
 public class TimeStampGeneration {
-    public static void main(String[] args) {
-        long[] time_stamps = generateTimeStamps(10, 20, 3);
-        System.out.println(Arrays.toString(time_stamps));
+    @Getter private List<Long> timeStamps;
+
+    public TimeStampGeneration(int size, long step_size, long delta) {
+        this.timeStamps = this.generateTimeStamps(size, step_size, delta);
     }
 
-    /**
-     * Generates an array of time stamps (as 8 byte longs).
-     * Parameters:
-     *      int size: Number of time stamps
-     *      long step_size: Determines time difference between two time stamps (in nano seconds)
-     *      long delta: Determines maximum deviation for time differences (in nano seconds)
-     */
+    public List<Long> generateTimeStamps(int size, long step_size, long delta) {
+        /**
+         * Generates an instance of a time stamps list (as 8 byte longs).
+         * Parameters:
+         *      int size: Number of time stamps
+         *      long stepSize: Determines time difference between two time stamps (in nano seconds)
+         *      long delta: Determines standard deviation (gaussian distribution) for time differences (in nano seconds)
+         */
 
-    public static long[] generateTimeStamps(int size, long step_size, long delta) {
-        long[] time_stamps = new long[size];
-        time_stamps[0] = 0;
+        List<Long> timeStamps = new ArrayList<Long>();
+        timeStamps.add((long) 0);
+
+        // create random object for delta calculation
+        Random random = new Random();
         for (int i = 1; i < size; i++) {
-            Random random = new Random();
-            long random_value = random.nextBoolean() ? (long) (Math.random()*delta) : (long) (Math.random()*delta) * -1;
-            time_stamps[i] = time_stamps[i-1] + step_size + random_value;
+            // use random sign and gaussian distribution
+            long random_value = random.nextBoolean() ?
+                    (long) (random.nextGaussian()*delta) : (long) (random.nextGaussian()*delta) * -1;
+
+            timeStamps.add(timeStamps.get(i-1) + step_size + random_value);
         }
 
-        return time_stamps;
+        return timeStamps;
     }
 }
