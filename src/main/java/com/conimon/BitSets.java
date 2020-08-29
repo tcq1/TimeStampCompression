@@ -1,14 +1,20 @@
 package com.conimon;
 
-import com.google.common.primitives.Longs;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 
-import java.util.Arrays;
 import java.util.BitSet;
+import java.util.List;
 import java.util.stream.IntStream;
 
+/**
+ * This class provides a representation of BitSets. It contains a BitSet but enhanced it with an length parameter.
+ * This allows for bit truncation which is otherwise not possible.
+ * The truncation algorithm is designed according to the paper "Lossless Compression of High-volume Numerical Data from Simulations"
+ * https://www.researchgate.net/publication/2389424_Lossless_Compression_of_High-volume_Numerical_Data_from_Simulations
+ * @author herta
+ */
 @Data
 @AllArgsConstructor
 public class BitSets {
@@ -22,10 +28,13 @@ public class BitSets {
 
     public BitSets(@NonNull BitSet bits) {
         this.bits = bits;
-        this.length = bits.length();
+        this.length = bits.size();
     }
 
     public static BitSets fromLong(long value) {
+        if(value == 0) {
+          return new BitSets(new BitSet());
+        }
         return new BitSets(BitSet.valueOf(new long[]{value}));
     }
 
@@ -33,7 +42,7 @@ public class BitSets {
         return new BitSets(BitSet.valueOf(bytes));
     }
 
-    //TODO
+    // TODO
     public Long toLong() {
         return null;
     }
@@ -51,7 +60,7 @@ public class BitSets {
     }
 
     public static String toString(BitSet bs) {
-        return toString(bs, bs.length());
+        return toString(bs, bs.size());
     }
 
     private static String toString(BitSet bs, int length) {
@@ -72,7 +81,7 @@ public class BitSets {
             bitLength = bs.previousClearBit(bs.size()-1)+2;
         } // positive
         else {
-            bitLength = bs.length()+1;
+            bitLength = bs.previousSetBit(bs.size()-1)+2;
         }
         BitSet truncated = bs.get(0, bitLength);
         BitSet lengthBitSet = BitSet.valueOf(new long[]{bitLength});
@@ -83,10 +92,33 @@ public class BitSets {
         }
         int length = bitLength + BITS_OF_LENGTH;
         BitSets bitSets = new BitSets(truncated, length);
-        System.out.println("original: " + BitSets.toString(bs)+ "   bitLength: " + bitLength + "    in bits " + BitSets.toString(lengthBitSet));
-        System.out.println("truncated: " + BitSets.toString(truncated));
-        System.out.println("BitSets: " + bitSets.toString() + " total Length: " + length);
-        System.out.println("-------------------------------------------");
+        // System.out.println("original:  " + BitSets.toString(bs)+ "   bitLength: " + bitLength + "    in bits " + BitSets.toString(lengthBitSet));
+        // System.out.println("truncated: " + BitSets.toString(truncated));
+        // System.out.println("BitSets: " + bitSets.toString() + " total Length: " + bitSets.length);
+        // System.out.println("-------------------------------------------");
         return bitSets;
+    }
+
+    public static BitSet concatenate(List<BitSets> bitSetsList) {
+        int totalLength = bitSetsList.stream().mapToInt(BitSets::getLength).sum();
+        BitSet bs = new BitSet(totalLength);
+        int bitSetSize = bs.size();
+        int bitOffset = 0;
+        for (BitSets bitSets:bitSetsList) {
+            bitOffset += bitSets.length;
+            int fromIndex = bs.size() - 1;
+            while(true) {
+                int setBitIndex = bitSets.getBits().previousSetBit(fromIndex);
+                if(setBitIndex <0) {
+                    break;
+                } else {
+                    bs.set(bitSetSize - bitOffset + setBitIndex);
+                    fromIndex = setBitIndex-1;
+                }
+            }
+        }
+        System.out.println("totalLength: " + totalLength);
+        System.out.println("bitset size: " + bitSetSize);
+        return bs;
     }
 }
