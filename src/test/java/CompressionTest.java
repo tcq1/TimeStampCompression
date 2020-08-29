@@ -47,11 +47,11 @@ public class CompressionTest {
 
     @ParameterizedTest
     @MethodSource("provideTimestamps")
-    void concatenteTest(int differenceDegree, List<Long> timestamps) {
+    void concatenateTest(int differenceDegree, List<Long> timestamps) {
         List<BitSets> bitSetsList = Compression.toBitSets(timestamps, differenceDegree);
         CompressionTest.print(bitSetsList);
 
-        BitSet bs = Compression.concatenete(bitSetsList);
+        BitSet bs = Compression.concatenate(bitSetsList);
         System.out.println(BitSets.toString(bs));
     }
 

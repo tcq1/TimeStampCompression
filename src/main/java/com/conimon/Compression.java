@@ -19,9 +19,9 @@ public class Compression {
      * @return compressed BitSet
      */
     public static BitSet compress(List<Long> numberList, int differenceDegree) {
-        List<Long> differenceList =computeDifferenceList(numberList, differenceDegree);
+        List<Long> differenceList = computeDifferenceList(numberList, differenceDegree);
         List<BitSets> bitSetsList = toBitSets(differenceList, differenceDegree);
-        return concatenete(bitSetsList);
+        return concatenate(bitSetsList);
     }
 
     /**
@@ -46,7 +46,7 @@ public class Compression {
      * @param bitSetsList given List of BitSets
      * @return concatinated BitSet
      */
-    public static BitSet concatenete(List<BitSets> bitSetsList) {
+    public static BitSet concatenate(List<BitSets> bitSetsList) {
         return BitSets.concatenate(bitSetsList);
     }
 
