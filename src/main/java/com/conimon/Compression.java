@@ -31,7 +31,7 @@ public class Compression {
      * @return List of BitSets
      */
     public static List<BitSets> toBitSets(List<Long> numberList, int numberOfNotTruncated) {
-        List<BitSets> bitSetsList = numberList.subList(0,numberOfNotTruncated).stream()
+        List<BitSets> bitSetsList = numberList.subList(0, numberOfNotTruncated).stream()
                 .map(BitSets::fromLong)
                 .collect(Collectors.toList());
         List<BitSets> differenceBitSetsList = numberList.subList(numberOfNotTruncated, numberList.size()).stream()

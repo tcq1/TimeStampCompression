@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -38,21 +39,21 @@ public class BitSets {
         return new BitSets(BitSet.valueOf(new long[]{value}));
     }
 
-    public static BitSets fromByteArray(byte[] bytes) {
-        return new BitSets(BitSet.valueOf(bytes));
-    }
-
-    // TODO
     public Long toLong() {
-        return null;
+        /**
+         * Converts bits to long
+         */
+        return toLong(bits);
     }
 
     public static Long toLong(BitSet bs) {
+        /**
+         * Converts bs to long
+         */
+        if (bs.isEmpty()) {
+            return (long) 0;
+        }
         return bs.toLongArray()[0];
-    }
-
-    public static byte[] toByteArray(BitSet bs) {
-        return bs.toByteArray();
     }
 
     public String toString() {
@@ -92,10 +93,11 @@ public class BitSets {
         }
         int length = bitLength + BITS_OF_LENGTH;
         BitSets bitSets = new BitSets(truncated, length);
-        // System.out.println("original:  " + BitSets.toString(bs)+ "   bitLength: " + bitLength + "    in bits " + BitSets.toString(lengthBitSet));
-        // System.out.println("truncated: " + BitSets.toString(truncated));
-        // System.out.println("BitSets: " + bitSets.toString() + " total Length: " + bitSets.length);
-        // System.out.println("-------------------------------------------");
+        System.out.println("long: " + BitSets.toLong(bs));
+        System.out.println("original:  " + BitSets.toString(bs)+ "   bitLength: " + bitLength + "    in bits " + BitSets.toString(lengthBitSet));
+        System.out.println("truncated: " + BitSets.toString(truncated));
+        System.out.println("BitSets: " + bitSets.toString() + " total Length: " + bitSets.length);
+        System.out.println("-------------------------------------------");
         return bitSets;
     }
 
@@ -109,7 +111,7 @@ public class BitSets {
             int fromIndex = bs.size() - 1;
             while(true) {
                 int setBitIndex = bitSets.getBits().previousSetBit(fromIndex);
-                if(setBitIndex <0) {
+                if(setBitIndex < 0) {
                     break;
                 } else {
                     bs.set(bitSetSize - bitOffset + setBitIndex);
@@ -117,8 +119,65 @@ public class BitSets {
                 }
             }
         }
+
         System.out.println("totalLength: " + totalLength);
         System.out.println("bitset size: " + bitSetSize);
         return bs;
+    }
+
+    public static List<BitSets> deconcatenate(BitSet bs, int differenceDegree) {
+        /**
+         * Reverse concatenate()
+         * Parameters:
+         *      bs: Concatenated BitSet
+         *      differenceDegree: Chosen differenceDegree
+         * Returns a list of the BitSets of the long values
+         */
+
+        // TODO: negative values, write tests
+
+        int currentIndex = bs.size() - 1;
+        List<BitSets> bitSets = new ArrayList<>();
+
+        // get #differenceDegree first values
+        for (int i = 0; i < differenceDegree; i++) {
+            BitSet value = calculateDeconcatenatedValue(bs, currentIndex, BYTES_OF_LONG * BITS_OF_BYTE);
+            bitSets.add(new BitSets(value));
+            currentIndex -= BYTES_OF_LONG * BITS_OF_BYTE;
+        }
+
+        // get truncated values
+        while (bs.previousSetBit(currentIndex) != -1) {
+            // read size information
+            BitSet nextSizeBs = calculateDeconcatenatedValue(bs, currentIndex, BITS_OF_LENGTH);
+            int nextSize = toLong(nextSizeBs).intValue();
+            currentIndex -= BITS_OF_LENGTH;
+
+            BitSet nextValue = calculateDeconcatenatedValue(bs, currentIndex, nextSize);
+            bitSets.add(new BitSets(nextValue));
+            currentIndex -= nextSize;
+        }
+
+        return bitSets;
+    }
+
+    public static BitSet calculateDeconcatenatedValue(BitSet bs, int currentIndex, int size) {
+        /**
+         * Calculates next BitSet value
+         * Parameters:
+         *      bs: Complete BitSet
+         *      currentIndex: Current position in BitSet
+         *      size: Size of next value
+         */
+        int lowerBound = currentIndex - size;
+        BitSet value = new BitSet(size);
+
+        int setBitIndex = bs.previousSetBit(currentIndex);
+        while (setBitIndex > lowerBound) {
+            value.set(setBitIndex - lowerBound - 1);
+            setBitIndex = bs.previousSetBit(setBitIndex - 1);
+        }
+
+        return value;
     }
 }
