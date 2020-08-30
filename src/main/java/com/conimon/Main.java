@@ -6,14 +6,13 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         TimeStampGeneration timeStamps = new TimeStampGeneration(0.000001, 10000, 10);
-        int m = timeStamps.getTimeStamps().size();
-        BitSet concatenated = Compression.compress(timeStamps.getTimeStamps(), m);
-        List<BitSets> deconcatenated = BitSets.deconcatenate(concatenated, m);
-        List<BitSets> test = Compression.toBitSets(timeStamps.getTimeStamps(), m);
-        System.out.println(timeStamps.getTimeStamps() + "\n--------------------------------------");
-        System.out.println(concatenated + "\n--------------------------------------");
-        System.out.println(deconcatenated);
-        System.out.println(test);
-        System.out.println(test.equals(deconcatenated));
+        int differenceDegree = 2;
+        BitSet compressed = Compression.compress(timeStamps.getTimeStamps(), differenceDegree);
+        List<Long> decompressed = Decompression.decompress(compressed, differenceDegree);
+
+        System.out.println(timeStamps.getTimeStamps());
+        System.out.println(compressed);
+        System.out.println(decompressed);
+        System.out.println(decompressed.equals(timeStamps.getTimeStamps()));
     }
 }

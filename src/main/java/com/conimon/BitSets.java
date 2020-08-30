@@ -134,38 +134,66 @@ public class BitSets {
          * Returns a list of the BitSets of the long values
          */
 
-        // TODO: negative values, write tests
+        // TODO: write tests
 
-        int currentIndex = bs.size() - 1;
         List<BitSets> bitSets = new ArrayList<>();
 
-        // get #differenceDegree first values
+        // get first values
+        bitSets = deconcatenateFirstValues(bs, differenceDegree);
+
+        // get truncated values
+        bitSets = deconcatenateTruncatedValues(bitSets, bs, differenceDegree);
+
+        return bitSets;
+    }
+
+    public static List<BitSets> deconcatenateFirstValues(BitSet bs, int differenceDegree) {
+        /**
+         * Returns a list with the BitSets of the first #differenceDegree values.
+         * Those values are not concatenated and 64 Bit long
+         */
+
+        List<BitSets> values = new ArrayList<>();
+        int currentIndex = bs.size() - 1;
+
         for (int i = 0; i < differenceDegree; i++) {
             BitSet value = calculateDeconcatenatedValue(bs, currentIndex, BYTES_OF_LONG * BITS_OF_BYTE);
-            bitSets.add(new BitSets(value));
+            values.add(new BitSets(value));
             currentIndex -= BYTES_OF_LONG * BITS_OF_BYTE;
         }
 
-        // get truncated values
+        return values;
+    }
+
+    public static List<BitSets> deconcatenateTruncatedValues(List<BitSets> values, BitSet bs, int differenceDegree) {
+        /**
+         * Returns a list with the BitSets of the truncated values.
+         * Truncated values consist of 6 Bit size information and the values.
+         */
+
+        // determine currentIndex
+        int currentIndex = bs.size() - 1 - differenceDegree * BYTES_OF_LONG * BITS_OF_BYTE;
+
         while (bs.previousSetBit(currentIndex) != -1) {
             // read size information
             BitSet nextSizeBs = calculateDeconcatenatedValue(bs, currentIndex, BITS_OF_LENGTH);
             int nextSize = toLong(nextSizeBs).intValue();
             currentIndex -= BITS_OF_LENGTH;
 
+            // calculate BitSet and add to list
             BitSet nextValue = calculateDeconcatenatedValue(bs, currentIndex, nextSize);
-            bitSets.add(new BitSets(nextValue));
+            values.add(new BitSets(nextValue));
             currentIndex -= nextSize;
         }
 
-        return bitSets;
+        return values;
     }
 
     public static BitSet calculateDeconcatenatedValue(BitSet bs, int currentIndex, int size) {
         /**
-         * Calculates next BitSet value
+         * Calculates next BitSet
          * Parameters:
-         *      bs: Complete BitSet
+         *      bs: Complete concatenated BitSet
          *      currentIndex: Current position in BitSet
          *      size: Size of next value
          */
@@ -173,11 +201,28 @@ public class BitSets {
         BitSet value = new BitSet(size);
 
         int setBitIndex = bs.previousSetBit(currentIndex);
+        boolean negative = bs.get(currentIndex);
+
         while (setBitIndex > lowerBound) {
             value.set(setBitIndex - lowerBound - 1);
             setBitIndex = bs.previousSetBit(setBitIndex - 1);
         }
 
+        if (negative) { value = makeNegative(value); }
+
         return value;
+    }
+
+    public static BitSet makeNegative(BitSet bs) {
+        /**
+         * Changes all leading Bits of bs to 1 to get negative long value
+         */
+
+         int setBitIndex = bs.size() - 1;
+         for (int i = setBitIndex; i > bs.previousSetBit(setBitIndex--); i--) {
+             bs.set(i);
+         }
+
+         return bs;
     }
 }
