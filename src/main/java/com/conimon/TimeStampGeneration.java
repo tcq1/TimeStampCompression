@@ -14,15 +14,14 @@ public class TimeStampGeneration {
         this.timeStamps = this.generateTimeStamps(maxTime, frequency, delta);
     }
 
+    /**
+     * Generates an instance of a time stamps list (as 8 byte longs).
+     * @param maxTime: Sampling time in seconds
+     * @param frequency: Sampling frequency in kHz
+     * @param delta: Determines standard deviation for time differences (in nano seconds)
+     * @return List of timestamp values
+     */
     public List<Long> generateTimeStamps(double maxTime, double frequency, long delta) {
-        /**
-         * Generates an instance of a time stamps list (as 8 byte longs).
-         * Parameters:
-         *      maxTime: Sampling time in seconds
-         *      stepSize: Sampling frequency in kHz
-         *      delta: Determines standard deviation for time differences (in nano seconds)
-         */
-
         List<Long> timeStamps = new ArrayList<>();
         timeStamps.add((long) 0);
 

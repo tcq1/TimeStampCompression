@@ -125,15 +125,13 @@ public class BitSets {
         return bs;
     }
 
+    /**
+     * Reverse function of concatenate()
+     * @param bs: Concatenated BitSet
+     * @param differenceDegree: Chosen DifferenceDegree
+     * @return List of BitSets of all long values
+     */
     public static List<BitSets> deconcatenate(BitSet bs, int differenceDegree) {
-        /**
-         * Reverse concatenate()
-         * Parameters:
-         *      bs: Concatenated BitSet
-         *      differenceDegree: Chosen differenceDegree
-         * Returns a list of the BitSets of the long values
-         */
-
         // TODO: write tests
 
         List<BitSets> bitSets = new ArrayList<>();
@@ -147,12 +145,14 @@ public class BitSets {
         return bitSets;
     }
 
+    /**
+     * Returns a list with the BitSets of the first #differenceDegree values.
+     * Those values are not concatenated and 64 Bit long
+     * @param bs: Complete BitSet
+     * @param differenceDegree: Chosen differenceDegree
+     * @return List of BitSets of first long values
+     */
     public static List<BitSets> deconcatenateFirstValues(BitSet bs, int differenceDegree) {
-        /**
-         * Returns a list with the BitSets of the first #differenceDegree values.
-         * Those values are not concatenated and 64 Bit long
-         */
-
         List<BitSets> values = new ArrayList<>();
         int currentIndex = bs.size() - 1;
 
@@ -165,12 +165,15 @@ public class BitSets {
         return values;
     }
 
+    /**
+     * Calculates BitSets of truncated values.
+     * Truncated values consist of 6 Bit size information and the values.
+     * @param values: List of concatenated BitSets
+     * @param bs: Complete BitSet
+     * @param differenceDegree: Chosen differenceDegree
+     * @return List of deconcatenated BitSets of truncated values
+     */
     public static List<BitSets> deconcatenateTruncatedValues(List<BitSets> values, BitSet bs, int differenceDegree) {
-        /**
-         * Returns a list with the BitSets of the truncated values.
-         * Truncated values consist of 6 Bit size information and the values.
-         */
-
         // determine currentIndex
         int currentIndex = bs.size() - 1 - differenceDegree * BYTES_OF_LONG * BITS_OF_BYTE;
 
@@ -189,14 +192,14 @@ public class BitSets {
         return values;
     }
 
+    /**
+     * Calculates next BitSet
+     * @param bs: Complete concatenated BitSet
+     * @param currentIndex: Current position in BitSet
+     * @param size: Size of next value
+     * @return BitSet of a long
+     */
     public static BitSet calculateDeconcatenatedValue(BitSet bs, int currentIndex, int size) {
-        /**
-         * Calculates next BitSet
-         * Parameters:
-         *      bs: Complete concatenated BitSet
-         *      currentIndex: Current position in BitSet
-         *      size: Size of next value
-         */
         int lowerBound = currentIndex - size;
         BitSet value = new BitSet(size);
 
@@ -213,11 +216,12 @@ public class BitSets {
         return value;
     }
 
+    /**
+     * Changes all leading Bits of bs to 1 to get negative long value
+     * @param bs: BitSet of a long
+     * @return BitSet of a long with leading 1
+     */
     public static BitSet makeNegative(BitSet bs) {
-        /**
-         * Changes all leading Bits of bs to 1 to get negative long value
-         */
-
          int setBitIndex = bs.size() - 1;
          for (int i = setBitIndex; i > bs.previousSetBit(setBitIndex--); i--) {
              bs.set(i);
