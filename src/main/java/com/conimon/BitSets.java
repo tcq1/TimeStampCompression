@@ -93,11 +93,12 @@ public class BitSets {
         }
         int length = bitLength + BITS_OF_LENGTH;
         BitSets bitSets = new BitSets(truncated, length);
-        System.out.println("long: " + BitSets.toLong(bs));
-        System.out.println("original:  " + BitSets.toString(bs)+ "   bitLength: " + bitLength + "    in bits " + BitSets.toString(lengthBitSet));
-        System.out.println("truncated: " + BitSets.toString(truncated));
-        System.out.println("BitSets: " + bitSets.toString() + " total Length: " + bitSets.length);
-        System.out.println("-------------------------------------------");
+        //System.out.println("long: " + BitSets.toLong(bs));
+        //System.out.println("original:  " + BitSets.toString(bs)+ "   bitLength: " + bitLength + "    in bits " + BitSets.toString(lengthBitSet));
+        //System.out.println("truncated: " + BitSets.toString(truncated));
+        //System.out.println("BitSets: " + bitSets.toString() + " total Length: " + bitSets.length);
+        //System.out.println("-------------------------------------------");
+
         return bitSets;
     }
 
