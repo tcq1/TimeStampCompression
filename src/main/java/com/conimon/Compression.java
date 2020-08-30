@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * This class is an implementation of the algorithm described in "Lossless main.java.com.conimon.Compression of High-volume Numerical Data from Simulations"
+ * This class is an implementation of the algorithm as described in "Lossless Compression of High-volume Numerical Data from Simulations"
  * https://www.researchgate.net/publication/2389424_Lossless_Compression_of_High-volume_Numerical_Data_from_Simulations
  * @author herta
  */
