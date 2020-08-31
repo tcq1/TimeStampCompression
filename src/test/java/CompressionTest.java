@@ -28,7 +28,9 @@ public class CompressionTest {
     @ParameterizedTest
     @MethodSource("provideDifferenceDegree")
     void testComputeDifferenceList(int differenceDegree, List<Long> expected) {
+        System.out.println("TestParameter:  differenceDegree: " + differenceDegree);
         List<Long> differences = Compression.computeDifferenceList(timestamps, differenceDegree);
+        System.out.println("differences: " + differences);
         assertEquals(expected, differences);
     }
 
@@ -42,10 +44,11 @@ public class CompressionTest {
     @ParameterizedTest
     @MethodSource("provideNumberList")
     void testConcatenate(int numberOfNotTruncated, List<Long> numberList, String expected) {
+        System.out.println("TestParameter:  not truncated: " + numberOfNotTruncated + " numberList: " + numberList);
         List<BitSets> bitSetsList = Compression.toBitSets(numberList, numberOfNotTruncated);
-        CompressionTest.print(bitSetsList);
-
         BitSet bs = Compression.concatenate(bitSetsList);
+        CompressionTest.print(bitSetsList);
+        System.out.println("concatenated: " + BitSets.toString(bs));
         assertEquals(expected, BitSets.toString(bs));
     }
 
@@ -71,7 +74,9 @@ public class CompressionTest {
     @ParameterizedTest
     @MethodSource("provideTimestamps")
     void testCompress(int differenceDegree, List<Long> timestamps, String expected) {
+        System.out.println("TestParameter:  differenceDegree: " + differenceDegree + " timestamps: " + timestamps);
         BitSet bs = Compression.compress(timestamps, differenceDegree);
+        System.out.println("compressed: " + BitSets.toString(bs));
         assertEquals(expected, BitSets.toString(bs));
     }
 

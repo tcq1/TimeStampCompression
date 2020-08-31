@@ -30,6 +30,8 @@ public class BitSetsTest {
     @ParameterizedTest
     @MethodSource("provideLong")
     public void testFromLong(long value, String expected) {
+        System.out.println("TestParameter:  value: " + value);
+        System.out.println("binary representation: " + BitSets.fromLong(value).toString());
         assertEquals(expected, BitSets.fromLong(value).toString());
     }
 
@@ -49,6 +51,8 @@ public class BitSetsTest {
     @ParameterizedTest
     @MethodSource("provideLongTruncate")
     public void testTruncate(long value, String expected) {
+        System.out.println("TestParameter:  value: " + value);
+        System.out.println("binary truncated " + BitSets.fromLong(value).truncate().toString());
         assertEquals(expected, BitSets.fromLong(value).truncate().toString());
     }
 
@@ -76,8 +80,9 @@ public class BitSetsTest {
     @ParameterizedTest
     @MethodSource("provideBitSetsList")
     public void testConcatenate(List<BitSets> bitSetsList, String expected) {
+        System.out.println("TestParameter:  bitSetsList: " + bitSetsList.stream().map(BitSets::toString).collect(Collectors.joining(" ")));
         BitSet bs = BitSets.concatenate(bitSetsList);
-        System.out.println(BitSets.toString(bs));
+        System.out.println("concatenated: " + BitSets.toString(bs));
         assertEquals(expected, BitSets.toString(bs));
     }
 
