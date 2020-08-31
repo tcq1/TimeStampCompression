@@ -47,6 +47,8 @@ public class BitSets {
 
     /**
      * Wrapper for truncate method. Truncates BitSets instance by removing leading 0 or 1.
+     * Then adds the length of truncated bitSet in a 6 bit binary at the top.
+     * Creates a new BitSets of it.
      * For details of the algorithm please refer to the paper in the {@link BitSets})
      * @return truncated BitSets
      */
@@ -55,7 +57,9 @@ public class BitSets {
     }
 
     /**
-     * Truncates given BitSet by removing leading 0 or 1 and creates a new BitSets of it.
+     * Truncates given BitSet by removing leading 0 or 1.
+     * Then adds the length of truncated bitSet in a 6 bit binary at the top.
+     * Creates a new BitSets of it.
      * For details of the algorithm please refer to the paper in the {@link BitSets})
      * @param bs given BitSet
      * @return truncated BitSets
