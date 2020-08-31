@@ -33,7 +33,7 @@ public class CompressionTest {
 
     @ParameterizedTest
     @MethodSource("provideDifferenceDegree")
-    void computeDifferenceListTest(int differenceDegree, List<Long> expected) {
+    void testComputeDifferenceList(int differenceDegree, List<Long> expected) {
         List<Long> differences = Compression.computeDifferenceList(timestamps, differenceDegree);
         assertEquals(expected, differences);
     }
@@ -47,7 +47,7 @@ public class CompressionTest {
 
     @ParameterizedTest
     @MethodSource("provideTimestamps")
-    void concatenateTest(int differenceDegree, List<Long> timestamps) {
+    void testConcatenate(int differenceDegree, List<Long> timestamps) {
         List<BitSets> bitSetsList = Compression.toBitSets(timestamps, differenceDegree);
         CompressionTest.print(bitSetsList);
 
@@ -57,14 +57,14 @@ public class CompressionTest {
 
     @ParameterizedTest
     @MethodSource("provideTimestamps")
-    void toBitSetsTest(int differenceDegree, List<Long> timestamps) {
+    void testToBitSets(int differenceDegree, List<Long> timestamps) {
         List<BitSets> bitSetsList = Compression.toBitSets(timestamps, differenceDegree);
         CompressionTest.print(bitSetsList);
     }
 
     @ParameterizedTest
     @MethodSource("provideTimestamps")
-    void compressTest(int differenceDegree, List<Long> timestamps) {
+    void testCompress(int differenceDegree, List<Long> timestamps) {
         BitSet bs = Compression.compress(timestamps, differenceDegree);
         System.out.println(BitSets.toString(bs));
     }
