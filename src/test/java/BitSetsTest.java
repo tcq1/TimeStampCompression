@@ -40,8 +40,8 @@ public class BitSetsTest {
                 Arguments.of(-6, "1111111111111111111111111111111111111111111111111111111111111010"),
                 Arguments.of(-1, "1111111111111111111111111111111111111111111111111111111111111111"),
                 Arguments.of(57, "0000000000000000000000000000000000000000000000000000000000111001"),
-                Arguments.of(7,  "0000000000000000000000000000000000000000000000000000000000000111"),
                 Arguments.of(-3, "1111111111111111111111111111111111111111111111111111111111111101"),
+                Arguments.of(7,  "0000000000000000000000000000000000000000000000000000000000000111"),
                 Arguments.of(-5, "1111111111111111111111111111111111111111111111111111111111111011")
         );
     }
@@ -64,10 +64,10 @@ public class BitSetsTest {
                 Arguments.of(-1, "0000011"),
                 // length 7:0b000111 0111001
                 Arguments.of(57, "0001110111001"),
-                // length 4:0b000100 0111
-                Arguments.of(7, "0001000111"),
                 // length 3:0b000011 101
                 Arguments.of(-3, "000011101"),
+                // length 4:0b000100 0111
+                Arguments.of(7, "0001000111"),
                 // length 4:0b000100 1011
                 Arguments.of(-5, "0001001011")
         );
@@ -85,10 +85,10 @@ public class BitSetsTest {
         return Stream.of(
                 Arguments.of(BitSetsTest.toLong(Arrays.asList(1, 0, -6, -1, 57)).stream()
                         .map(n -> BitSets.fromLong(n).truncate())
-                        .collect(Collectors.toList()), "0000100100000100001001010000001100011101110010000000000000000000"),
-                Arguments.of(BitSetsTest.toLong(Arrays.asList(0, 7, -3, -5)).stream()
+                        .collect(Collectors.toList()), "000010010000010000100101000000110001110111001" + "0000000000000000000"),
+                Arguments.of(BitSetsTest.toLong(Arrays.asList(-3, 7, 0, -5)).stream()
                         .map(n -> BitSets.fromLong(n).truncate())
-                        .collect(Collectors.toList()), "0000010000100011100001110100010010110000000000000000000000000000")
+                        .collect(Collectors.toList()), "000011101000100011100000100001001011" + "0000000000000000000000000000")
         );
     }
 
