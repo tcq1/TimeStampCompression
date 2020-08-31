@@ -93,19 +93,19 @@ public class BitSetsTest {
     }
 
     @Test
-    public void testDeconcatenateFirstValues() {
+    public void testDissociateFirstValues() {
 
     }
 
     @Test
-    public void testDeconcatenateTruncatedValues() {
+    public void testDissociateTruncatedValues() {
 
     }
 
     @Test
-    public void testCalculateDeconcatenatedValue() {
+    public void testCalculateDissociatedValue() {
         BitSet expected = BitSet.valueOf(new long[] {0b01110});
-        assertEquals(expected, BitSets.calculateDeconcatenatedValue(bitSet, 6, 5));
+        assertEquals(expected, BitSets.calculateDissociatedValue(bitSet, 6, 5));
     }
 
     @Test
