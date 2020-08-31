@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import lombok.Getter;
+import lombok.Setter;
 
 public class TimeStampGeneration {
-    @Getter private List<Long> timeStamps;
-    private Random random;
+    @Getter @Setter private List<Long> timeStamps;
 
     public TimeStampGeneration(double maxTime, double frequency, long delta) {
-        this.random = new Random();
         this.timeStamps = this.generateTimeStamps(maxTime, frequency, delta);
     }
 
@@ -32,6 +31,8 @@ public class TimeStampGeneration {
 
         // calculate step size in nano seconds
         long stepSize = (long) ((1/frequency) * Math.pow(10, 6));
+
+        Random random = new Random();
 
         while (!limitReached) {
             // calculate random value based on gaussian distribution

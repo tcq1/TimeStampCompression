@@ -17,24 +17,22 @@ public class Decompression {
      * @return List with decompressed timestamp values
      */
     public static List<Long> decompress(BitSet compressedList, int differenceDegree) {
-        List<BitSets> deconcatenated = BitSets.deconcatenate(compressedList, differenceDegree);
-        List<Long> longValues = getLongValues(deconcatenated);
+        List<BitSets> dissociated = BitSets.dissociate(compressedList, differenceDegree);
+        List<Long> longValues = getLongValues(dissociated);
 
-        List<Long> decompressed = calculateTimestamps(longValues, differenceDegree, differenceDegree);
-
-        return decompressed;
+        return calculateTimestamps(longValues, differenceDegree, differenceDegree);
     }
 
     /**
      * Takes a list of BitSets and returns the first #differenceDegree values
-     * @param bitSetsValues: BitSets list with deconcatenated values
+     * @param bitSetsValues: BitSets list with dissociated values
      * @return List values converted to Long
      */
     public static List<Long> getLongValues(List<BitSets> bitSetsValues) {
         List<Long> longValues = new ArrayList<>();
 
-        for (int i = 0; i < bitSetsValues.size(); i++) {
-            longValues.add(bitSetsValues.get(i).toLong());
+        for (BitSets bitSetsValue : bitSetsValues) {
+            longValues.add(bitSetsValue.toLong());
         }
 
         return longValues;
@@ -42,7 +40,7 @@ public class Decompression {
 
     /**
      * Recursive function to calculate the next difference list until original timestamps calculated
-     * @param currentDifferences: Current differences list (initial: long values of deconcatenated BitSets)
+     * @param currentDifferences: Current differences list (initial: long values of dissociated BitSets)
      * @param differenceDegree: Chosen differenceDegree
      * @param currentDegree: Current differenceDegree, decreases in every step (initial: differenceDegree)
      * @return List with timestamp values
@@ -57,7 +55,7 @@ public class Decompression {
 
     /**
      * Calculates the difference list of the level differenceDegree - 1
-     * @param currentDifferences: Current differences list (initial: long values of deconcatenated BitSets)
+     * @param currentDifferences: Current differences list (initial: long values of dissociated BitSets)
      * @param differenceDegree: Chosen differenceDegree
      * @return List with difference values from the next degree
      */
@@ -76,7 +74,7 @@ public class Decompression {
      * Returns a Long List of the first #differenceDegree values
      * @param values: List of values
      * @param differenceDegree: Chosen differenceDegree
-     * @return
+     * @return List with the first values
      */
     public static List<Long> addFirstValues(List<Long> values, int differenceDegree) {
         List<Long> firstValues = new ArrayList<>();

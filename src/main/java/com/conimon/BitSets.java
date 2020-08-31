@@ -82,14 +82,14 @@ public class BitSets {
             }
         }
         int length = bitLength + BITS_OF_LENGTH;
-        BitSets bitSets = new BitSets(truncated, length);
+
         //System.out.println("long: " + BitSets.toLong(bs));
         //System.out.println("original:  " + BitSets.toString(bs)+ "   bitLength: " + bitLength + "    in bits " + BitSets.toString(lengthBitSet));
         //System.out.println("truncated: " + BitSets.toString(truncated));
         //System.out.println("BitSets: " + bitSets.toString() + " total Length: " + bitSets.length);
         //System.out.println("-------------------------------------------");
 
-        return bitSets;
+        return new BitSets(truncated, length);
     }
 
     /**
@@ -127,18 +127,10 @@ public class BitSets {
      * @param differenceDegree: Chosen DifferenceDegree
      * @return List of BitSets of all long values
      */
-    public static List<BitSets> deconcatenate(BitSet bs, int differenceDegree) {
+    public static List<BitSets> dissociate(BitSet bs, int differenceDegree) {
         // TODO: write tests
 
-        List<BitSets> bitSets = new ArrayList<>();
-
-        // get first values
-        bitSets = deconcatenateFirstValues(bs, differenceDegree);
-
-        // get truncated values
-        bitSets = deconcatenateTruncatedValues(bitSets, bs, differenceDegree);
-
-        return bitSets;
+        return dissociateTruncatedValues(dissociateFirstValues(bs, differenceDegree), bs, differenceDegree);
     }
 
     /**
@@ -148,12 +140,12 @@ public class BitSets {
      * @param differenceDegree: Chosen differenceDegree
      * @return List of BitSets of first long values
      */
-    public static List<BitSets> deconcatenateFirstValues(BitSet bs, int differenceDegree) {
+    public static List<BitSets> dissociateFirstValues(BitSet bs, int differenceDegree) {
         List<BitSets> values = new ArrayList<>();
         int currentIndex = bs.size() - 1;
 
         for (int i = 0; i < differenceDegree; i++) {
-            BitSet value = calculateDeconcatenatedValue(bs, currentIndex, BYTES_OF_LONG * BITS_OF_BYTE);
+            BitSet value = calculateDissociatedValue(bs, currentIndex, BYTES_OF_LONG * BITS_OF_BYTE);
             values.add(new BitSets(value));
             currentIndex -= BYTES_OF_LONG * BITS_OF_BYTE;
         }
@@ -167,20 +159,20 @@ public class BitSets {
      * @param values: List of concatenated BitSets
      * @param bs: Complete BitSet
      * @param differenceDegree: Chosen differenceDegree
-     * @return List of deconcatenated BitSets of truncated values
+     * @return List of dissociated BitSets of truncated values
      */
-    public static List<BitSets> deconcatenateTruncatedValues(List<BitSets> values, BitSet bs, int differenceDegree) {
+    public static List<BitSets> dissociateTruncatedValues(List<BitSets> values, BitSet bs, int differenceDegree) {
         // determine currentIndex
         int currentIndex = bs.size() - 1 - differenceDegree * BYTES_OF_LONG * BITS_OF_BYTE;
 
         while (bs.previousSetBit(currentIndex) != -1) {
             // read size information
-            BitSet nextSizeBs = calculateDeconcatenatedValue(bs, currentIndex, BITS_OF_LENGTH);
+            BitSet nextSizeBs = calculateDissociatedValue(bs, currentIndex, BITS_OF_LENGTH);
             int nextSize = toLong(nextSizeBs).intValue();
             currentIndex -= BITS_OF_LENGTH;
 
             // calculate BitSet and add to list
-            BitSet nextValue = calculateDeconcatenatedValue(bs, currentIndex, nextSize);
+            BitSet nextValue = calculateDissociatedValue(bs, currentIndex, nextSize);
             values.add(new BitSets(nextValue));
             currentIndex -= nextSize;
         }
@@ -195,7 +187,7 @@ public class BitSets {
      * @param size: Size of next value
      * @return BitSet of a long
      */
-    public static BitSet calculateDeconcatenatedValue(BitSet bs, int currentIndex, int size) {
+    public static BitSet calculateDissociatedValue(BitSet bs, int currentIndex, int size) {
         int lowerBound = currentIndex - size;
         BitSet value = new BitSet(size);
 
