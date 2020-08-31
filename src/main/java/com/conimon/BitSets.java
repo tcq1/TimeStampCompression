@@ -199,7 +199,9 @@ public class BitSets {
             setBitIndex = bs.previousSetBit(setBitIndex - 1);
         }
 
-        if (negative) { value = makeNegative(value); }
+        if (negative) {
+            makeNegative(value);
+        }
 
         return value;
     }
