@@ -116,8 +116,8 @@ public class BitSets {
             }
         }
 
-        System.out.println("totalLength: " + totalLength);
-        System.out.println("bitset size: " + bitSetSize);
+        // System.out.println("totalLength: " + totalLength);
+        // System.out.println("bitset size: " + bitSetSize);
         return bs;
     }
 
