@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
  * The setup of this class allows for bit truncation that is otherwise not possible with the given BitSet class.
  * The truncation algorithm is designed according to the paper "Lossless Compression of High-volume Numerical Data from Simulations"
  * https://www.researchgate.net/publication/2389424_Lossless_Compression_of_High-volume_Numerical_Data_from_Simulations
- * @author herta
+ * @author herta, Trung
  */
 @Data
 @AllArgsConstructor
@@ -222,7 +222,7 @@ public class BitSets {
 
     /**
      * Converts bits to long
-     * @return TODO
+     * @return Long value of BitSets.bits
      */
     public Long toLong() {
         return toLong(bits);
@@ -230,8 +230,8 @@ public class BitSets {
 
     /**
      * Converts bs to long
-     * @param bs TODO
-     * @return TODO
+     * @param bs BitSet that has to be converted
+     * @return Long value of bs
      */
     public static Long toLong(BitSet bs) {
         if (bs.isEmpty()) {

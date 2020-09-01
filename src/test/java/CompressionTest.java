@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CompressionTest {
-    private Compression compression;
     List<Long> timestamps;
 
     @BeforeAll

@@ -6,6 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
@@ -17,14 +18,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BitSetsTest {
     private BitSet bitSet;
-    private BitSets bitSets;
 
     @BeforeAll
     public void setUp() {
         // bitSet = {0, 3, 4, 5} = 0011 1001 = 57
         bitSet = BitSet.valueOf(new long[] {0b00111001});
-
-        bitSets = new BitSets(bitSet);
     }
 
     @ParameterizedTest
@@ -66,7 +64,7 @@ public class BitSetsTest {
 
     @Test
     public void testConcatenate() {
-        List<Long>longs = BitSetsTest.toLong(Arrays.asList(1, 0, -6, -1, 57));
+        List<Long> longs = BitSetsTest.toLong(Arrays.asList(1, 0, -6, -1, 57));
         List<BitSets> bitSetsList = longs.stream()
                 .map(n -> BitSets.fromLong(n).truncate())
                 .collect(Collectors.toList());
@@ -76,12 +74,50 @@ public class BitSetsTest {
 
     @Test
     public void testDissociateFirstValues() {
+        // bs1: (0, 3, 5, 2)
+        int[] setIndex1 = new int[] {37, 39, 40, 45, 47, 51, 55, 56, 58, 59};
 
+        // bs2: (1, 0, 3, 5, 2)
+        int[] setIndex2 = new int[] {37, 39, 40, 45, 47, 51, 55, 56, 58, 59, 128};
+
+        List<BitSets> expected1 = new ArrayList<>();
+        expected1.add(BitSets.fromLong(0));
+
+        List<BitSets> expected2 = new ArrayList<>();
+        expected2.add(BitSets.fromLong(1));
+        expected2.add(BitSets.fromLong(0));
+
+        assertEquals(expected1, BitSets.dissociateFirstValues(generateBitSet(setIndex1, 128), 1));
+        assertEquals(expected2, BitSets.dissociateFirstValues(generateBitSet(setIndex2, 192), 2));
     }
 
     @Test
     public void testDissociateTruncatedValues() {
+        // bs1: (0, 3, 5, 2)
+        int[] setIndex1 = new int[] {37, 39, 40, 45, 47, 51, 55, 56, 58, 59};
 
+        // bs2: (1, 0, 3, 5, 2)
+        int[] setIndex2 = new int[] {37, 39, 40, 45, 47, 51, 55, 56, 58, 59, 128};
+
+        List<BitSets> expected = new ArrayList<>();
+        expected.add(BitSets.fromLong(3));
+        expected.add(BitSets.fromLong(5));
+        expected.add(BitSets.fromLong(2));
+
+        assertEquals(expected, BitSets.dissociateTruncatedValues(new ArrayList<>(),
+                generateBitSet(setIndex1, 128), 1));
+        assertEquals(expected, BitSets.dissociateTruncatedValues(new ArrayList<>(),
+                generateBitSet(setIndex2, 192), 2));
+    }
+
+    private BitSet generateBitSet(int[] setIndex, int minSize) {
+        BitSet bs = new BitSet(minSize);
+
+        for (int index : setIndex) {
+            bs.set(index);
+        }
+
+        return bs;
     }
 
     @Test
