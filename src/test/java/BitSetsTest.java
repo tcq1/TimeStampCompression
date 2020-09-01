@@ -17,12 +17,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BitSetsTest {
-    private BitSet bitSet;
+    private int[] setIndex1;
+    private int[] setIndex2;
 
     @BeforeAll
     public void setUp() {
-        // bitSet = {0, 3, 4, 5} = 0011 1001 = 57
-        bitSet = BitSet.valueOf(new long[] {0b00111001});
+        // bs1: (0, 3, 5, 2)
+        setIndex1 = new int[] {37, 39, 40, 45, 47, 51, 55, 56, 58, 59};
+
+        // bs2: (1, 0, 3, 5, 2)
+        setIndex2 = new int[] {37, 39, 40, 45, 47, 51, 55, 56, 58, 59, 128};
     }
 
     @ParameterizedTest
@@ -92,12 +96,6 @@ public class BitSetsTest {
 
     @Test
     public void testDissociateFirstValues() {
-        // bs1: (0, 3, 5, 2)
-        int[] setIndex1 = new int[] {37, 39, 40, 45, 47, 51, 55, 56, 58, 59};
-
-        // bs2: (1, 0, 3, 5, 2)
-        int[] setIndex2 = new int[] {37, 39, 40, 45, 47, 51, 55, 56, 58, 59, 128};
-
         List<BitSets> expected1 = new ArrayList<>();
         expected1.add(BitSets.fromLong(0));
 
@@ -111,12 +109,6 @@ public class BitSetsTest {
 
     @Test
     public void testDissociateTruncatedValues() {
-        // bs1: (0, 3, 5, 2)
-        int[] setIndex1 = new int[] {37, 39, 40, 45, 47, 51, 55, 56, 58, 59};
-
-        // bs2: (1, 0, 3, 5, 2)
-        int[] setIndex2 = new int[] {37, 39, 40, 45, 47, 51, 55, 56, 58, 59, 128};
-
         List<BitSets> expected = new ArrayList<>();
         expected.add(BitSets.fromLong(3));
         expected.add(BitSets.fromLong(5));
@@ -128,6 +120,25 @@ public class BitSetsTest {
                 generateBitSet(setIndex2, 192), 2));
     }
 
+    @Test
+    public void testCalculateDissociatedValue() {
+        BitSet expected1 = BitSet.valueOf(new long[] {0b011});
+        BitSet expected2 = BitSet.valueOf(new long[] {0b0101});
+
+        assertEquals(expected1, BitSets.calculateDissociatedValue(generateBitSet(setIndex1, 128),
+                57, 3));
+        assertEquals(expected2, BitSets.calculateDissociatedValue(generateBitSet(setIndex1, 128),
+                48, 4));
+    }
+
+    @Test
+    public void testMakeNegative() {
+        BitSet expected = new BitSet();
+        expected.set(6, 64);
+        expected.set(1, 3);
+        assertEquals(expected, BitSets.makeNegative(BitSet.valueOf(new long[] {0b1000110})));
+    }
+
     private BitSet generateBitSet(int[] setIndex, int minSize) {
         BitSet bs = new BitSet(minSize);
 
@@ -136,19 +147,6 @@ public class BitSetsTest {
         }
 
         return bs;
-    }
-
-    @Test
-    public void testCalculateDissociatedValue() {
-        BitSet expected = BitSet.valueOf(new long[] {0b01110});
-        assertEquals(expected, BitSets.calculateDissociatedValue(bitSet, 6, 5));
-    }
-
-    @Test
-    public void testMakeNegative() {
-        BitSet expected = bitSet;
-        expected.set(6, 64);
-        assertEquals(expected, BitSets.makeNegative(bitSet));
     }
 
     static List<Long> toLong(List<Integer> ints) {
