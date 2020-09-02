@@ -6,28 +6,32 @@ import java.util.Random;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Generates a list of timestamps
+ */
 public class TimeStampGeneration {
     @Getter @Setter private List<Long> timeStamps;
 
-    public TimeStampGeneration(double maxTime, double frequency, long delta) {
-        this.timeStamps = this.generateTimeStamps(maxTime, frequency, delta);
+    public TimeStampGeneration(long startTime, double maxTime, double frequency, long delta) {
+        this.timeStamps = this.generateTimeStamps(startTime, maxTime, frequency, delta);
     }
 
     /**
      * Generates an instance of a time stamps list (as 8 byte longs).
+     * @param startTime: start time of the sample
      * @param maxTime: Sampling time in seconds
      * @param frequency: Sampling frequency in kHz
      * @param delta: Determines standard deviation for time differences (in nano seconds)
      * @return List of timestamp values
      */
-    public List<Long> generateTimeStamps(double maxTime, double frequency, long delta) {
+    public List<Long> generateTimeStamps(long startTime, double maxTime, double frequency, long delta) {
         List<Long> timeStamps = new ArrayList<>();
-        timeStamps.add((long) 0);
+        timeStamps.add(startTime);
 
         boolean limitReached = false;
 
         // transform maxTime to nano seconds
-        maxTime = (long) (maxTime * Math.pow(10, 9));
+        maxTime = (long) (maxTime * Math.pow(10, 9) + startTime);
 
         // calculate step size in nano seconds
         long stepSize = (long) ((1/frequency) * Math.pow(10, 6));
