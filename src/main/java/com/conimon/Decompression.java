@@ -71,7 +71,6 @@ public class Decompression {
 
         for (Long dif:differences) {
             nextValue += dif;
-            //System.out.println(nextValue);
             nextDifferences.add(nextValue);
         }
 
