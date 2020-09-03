@@ -1,8 +1,6 @@
 package com.conimon;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * This class is an implementation of the algorithm as described in "Lossless Compression of High-volume Numerical Data from Simulations"
@@ -20,7 +18,7 @@ public class Decompression {
         List<BitSets> dissociated = BitSets.dissociate(compressedList, differenceDegree);
         List<Long> longValues = getLongValues(dissociated);
 
-        return calculateTimestamps(longValues, differenceDegree, differenceDegree);
+        return calculateTimestamps(longValues, differenceDegree);
     }
 
     /**
@@ -28,7 +26,7 @@ public class Decompression {
      * @param bitSetsValues: BitSets list with dissociated values
      * @return List values converted to Long
      */
-    public static List<Long> getLongValues(List<BitSets> bitSetsValues) {
+    private static List<Long> getLongValues(List<BitSets> bitSetsValues) {
         List<Long> longValues = new ArrayList<>();
 
         for (BitSets bitSetsValue : bitSetsValues) {
@@ -42,15 +40,15 @@ public class Decompression {
      * Recursive function to calculate the next difference list until original timestamps calculated
      * @param currentDifferences: Current differences list (initial: long values of dissociated BitSets)
      * @param differenceDegree: Chosen differenceDegree
-     * @param currentDegree: Current differenceDegree, decreases in every step (initial: differenceDegree)
      * @return List with timestamp values
      */
-    public static List<Long> calculateTimestamps(List<Long> currentDifferences, int differenceDegree,
-                                                  int currentDegree) {
-        List<Long> differenceList = calculateNextDifferences(currentDifferences, differenceDegree);
-
-        return currentDegree == 1 ? differenceList :
-                calculateTimestamps(differenceList, differenceDegree, currentDegree - 1);
+    public static List<Long> calculateTimestamps(List<Long> currentDifferences, int differenceDegree) {
+        List<Long> differences = currentDifferences;
+        while(differenceDegree != 0) {
+            differences = calculateNextDifferences(differences, differenceDegree);
+            differenceDegree --;
+        }
+        return differences;
     }
 
     /**
@@ -60,10 +58,20 @@ public class Decompression {
      * @return List with difference values from the next degree
      */
     public static List<Long> calculateNextDifferences(List<Long> currentDifferences, int differenceDegree) {
-        List<Long> nextDifferences = addFirstValues(currentDifferences, differenceDegree);
+        List<Long> nextDifferences = new ArrayList<>(addFirstValues(currentDifferences, differenceDegree));
+        List<Long> differences = currentDifferences.subList(differenceDegree, currentDifferences.size());
+        Long startDiffOfLowerDegree;
+        if(differenceDegree == 1) {
+            startDiffOfLowerDegree = currentDifferences.get(0);
+        } else {
+            startDiffOfLowerDegree = currentDifferences.get(differenceDegree-1) - currentDifferences.get(differenceDegree-2);
+            nextDifferences.add(startDiffOfLowerDegree);
+        }
+        Long nextValue = startDiffOfLowerDegree;
 
-        for (int i = differenceDegree; i < currentDifferences.size(); i++) {
-            long nextValue = currentDifferences.get(i) + nextDifferences.get(i-1);
+        for (Long dif:differences) {
+            nextValue += dif;
+            //System.out.println(nextValue);
             nextDifferences.add(nextValue);
         }
 
@@ -76,13 +84,11 @@ public class Decompression {
      * @param differenceDegree: Chosen differenceDegree
      * @return List with the first values
      */
-    public static List<Long> addFirstValues(List<Long> values, int differenceDegree) {
-        List<Long> firstValues = new ArrayList<>();
-
-        for (int i = 0; i < differenceDegree; i++) {
-            firstValues.add(values.get(i));
+    private static List<Long> addFirstValues(List<Long> values, int differenceDegree) {
+        if(differenceDegree == 1) {
+            return Collections.singletonList(values.get(0));
+        } else {
+            return values.subList(0, differenceDegree - 1);
         }
-
-        return firstValues;
     }
 }

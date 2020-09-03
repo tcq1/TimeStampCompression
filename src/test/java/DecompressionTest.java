@@ -24,7 +24,7 @@ public class DecompressionTest {
     public void setUp() {
         timestamps = CompressionTest.toLong(Arrays.asList(1, 10, 21, 30, 40, 50, 66, 70, 80, 99));
         difference1 = CompressionTest.toLong(Arrays.asList(1, 9, 11, 9, 10, 10, 16, 4, 10, 19));
-        difference2 = CompressionTest.toLong(Arrays.asList(1, 10, 1, -2, 1, 0, 6, -12, 6, 9));
+        difference2 = CompressionTest.toLong(Arrays.asList(1, 10, 2, -2, 1, 0, 6, -12, 6, 9));
     }
 
     @ParameterizedTest
@@ -45,8 +45,8 @@ public class DecompressionTest {
 
     @Test
     public void testCalculateTimestamps() {
-        List<Long> actual1 = Decompression.calculateTimestamps(difference1, 1, 1);
-        List<Long> actual2 = Decompression.calculateTimestamps(difference2, 2, 2);
+        List<Long> actual1 = Decompression.calculateTimestamps(difference1, 1);
+        List<Long> actual2 = Decompression.calculateTimestamps(difference2, 2);
 
         assertEquals(timestamps, actual1);
         assertEquals(timestamps, actual2);
@@ -56,6 +56,6 @@ public class DecompressionTest {
     public void testCalculateNextDifferences() {
         assertEquals(timestamps, Decompression.calculateNextDifferences(difference1, 1));
         assertEquals(timestamps, Decompression.calculateNextDifferences(
-                Decompression.calculateNextDifferences(difference2, 2), 2));
+                Decompression.calculateNextDifferences(difference2, 2), 1));
     }
 }
