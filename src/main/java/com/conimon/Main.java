@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        long nowInNanoSeconds = Instant.now().toEpochMilli();
+        long nowInNanoSeconds = Instant.now().toEpochMilli() * 1000000;
         System.out.println("Now in nanoseconds: " + nowInNanoSeconds);
         TimeStampGeneration timeStampGeneration = new TimeStampGeneration(nowInNanoSeconds, 30, 96, 100);
 
