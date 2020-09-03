@@ -44,7 +44,7 @@ public class Compression {
     /**
      * Concatinates List of BitSets to one BitSet
      * @param bitSetsList given List of BitSets
-     * @return concatinated BitSet
+     * @return concatenated BitSet
      */
     public static BitSet concatenate(List<BitSets> bitSetsList) {
         return BitSets.concatenate(bitSetsList);
@@ -57,16 +57,22 @@ public class Compression {
      */
     public static List<Long> computeDifferenceList(List<Long> numberList, int differenceDegree) {
         List<Long> differenceList = numberList;
-        for (int i=0; i < differenceDegree; i++) {
-            differenceList = computeDifferences(differenceList);
+
+        for (int currentDegree = 0; currentDegree < differenceDegree; currentDegree++) {
+            differenceList = computeDifferences(differenceList, differenceDegree);
         }
-        differenceList.addAll(0, numberList.subList(0, differenceDegree));
+
         return differenceList;
     }
 
-    private static List<Long> computeDifferences(List<Long> numberList) {
+    private static List<Long> computeDifferences(List<Long> numberList, int differenceDegree) {
         List<Long> difference = new ArrayList<>();
-        for (int i=1; i < numberList.size(); i++) {
+
+        for (int i = 0; i < differenceDegree; i++) {
+            difference.add(numberList.get(i));
+        }
+
+        for (int i=differenceDegree; i < numberList.size(); i++) {
             difference.add(numberList.get(i) - numberList.get(i-1));
         }
         return difference;

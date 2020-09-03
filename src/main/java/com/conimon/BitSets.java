@@ -128,8 +128,6 @@ public class BitSets {
      * @return List of BitSets of all long values
      */
     public static List<BitSets> dissociate(BitSet bs, int differenceDegree) {
-        // TODO: write tests
-
         return dissociateTruncatedValues(dissociateFirstValues(bs, differenceDegree), bs, differenceDegree);
     }
 
