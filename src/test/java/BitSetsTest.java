@@ -1,4 +1,5 @@
 import com.conimon.BitSets;
+import com.conimon.Compression;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -96,6 +97,41 @@ public class BitSetsTest {
                 Arguments.of(BitSetsTest.toLong(Arrays.asList(-3, 7, 0, -5)).stream()
                         .map(n -> BitSets.fromLong(n).truncate())
                         .collect(Collectors.toList()), "000011101000100011100000100001001011" + "0000000000000000000000000000")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTimestamps")
+    public void testDissociate(int differenceDegree, List<Long> timestamps, String expected) {
+        System.out.println(timestamps);
+        BitSet bs = Compression.compress(timestamps, differenceDegree);
+        System.out.println(BitSets.toString(bs));
+        List<BitSets> bitSetsList = BitSets.dissociate(bs, differenceDegree);
+        bitSetsList.stream().map(BitSets::toString).forEach(System.out::println);
+    }
+
+    private static Stream<Arguments> provideTimestamps() {
+        return Stream.of(
+                // 1, 0, -6, -1, 57
+                Arguments.of(1, CompressionTest.toLong(Arrays.asList(1, 1, -5, -6, 51)),
+                        "0000000000000000000000000000000000000000000000000000000000000001" +
+                                "0000010000100101000000110001110111001" + "000000000000000000000000000"),
+                // 1, 0, -6, -1, 57
+                // 1,-1, -7, -8, 49
+                Arguments.of(2, CompressionTest.toLong(Arrays.asList(1, 0, -7, -15, 34)),
+                        "0000000000000000000000000000000000000000000000000000000000000001" +
+                                "0000000000000000000000000000000000000000000000000000000000000000" +
+                                "000100101000000110001110111001" + "0000000000000000000000000000000000"),
+                // -3, 7, 0, -5
+                Arguments.of(1, CompressionTest.toLong(Arrays.asList(-3, 4, 4, -1)),
+                        "1111111111111111111111111111111111111111111111111111111111111101" +
+                                "000100011100000100001001011" + "0000000000000000000000000000000000000"),
+                // -3,  7,  0, -5
+                // -3, 10, 10, 5
+                Arguments.of(2, CompressionTest.toLong(Arrays.asList(-3, 7, 17, 22)),
+                        "1111111111111111111111111111111111111111111111111111111111111101" +
+                                "0000000000000000000000000000000000000000000000000000000000000111" +
+                                "00000100001001011" + "00000000000000000000000000000000000000000000000")
         );
     }
 
